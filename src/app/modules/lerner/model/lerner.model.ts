@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { TUserName } from "../../../interface/common/common.type";
 import { Gender } from "../constant/lerner.constant";
 import { LernerModel, TLerner } from "../interface/lerner.interface";
@@ -45,6 +45,7 @@ const lernerSchema = new Schema<TLerner, LernerModel>(
     },
     profileImg: {
       type: String,
+      default: "",
     },
     isDeleted: {
       type: Boolean,
@@ -75,20 +76,23 @@ lernerSchema.pre("find", function (next) {
   next();
 });
 
-/* adminSchema.pre("findOne", function (next) {
+lernerSchema.pre("findOne", function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
-}); */
+});
 
 lernerSchema.pre("aggregate", function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
 });
 
-// //checking if user is already exist!
-// lernerSchema.statics.isLernerExists = async function (id: string) {
-//   const existingUser = await Lerner.findOne({ id });
-//   return existingUser;
-// };
+//checking if user is already exist!
+lernerSchema.statics.isLernerExists = async function (id: string) {
+  const existingUser = await Lerner.findById(id);
+  return existingUser;
+};
 
-export const Lerner = model<TLerner, LernerModel>("Lerner", lernerSchema);
+export const Lerner = mongoose.model<TLerner, LernerModel>(
+  "Lerner",
+  lernerSchema,
+);

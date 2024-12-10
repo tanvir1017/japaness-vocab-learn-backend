@@ -5,6 +5,7 @@ import {
 } from "../../../interface/common/common.type";
 
 export type TLerner = {
+  _id: Types.ObjectId;
   user: Types.ObjectId;
   name: TUserName;
   password: string;

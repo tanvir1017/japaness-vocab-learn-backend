@@ -5,11 +5,19 @@ import { User } from "../../user/model/user.model";
 import { TLerner } from "../interface/lerner.interface";
 import { Lerner } from "../model/lerner.model";
 
+// * Get single lerner by Object Id from db
 const getSingleLernerFromDB = async (id: string) => {
-  const result = await Lerner.findById(id).populate("user");
+  const result = await Lerner.findById(id);
   return result;
 };
 
+// * Get all Lerner From Db
+const getAllLernerFromDB = async () => {
+  const result = await Lerner.find({});
+  return result;
+};
+
+// * Updating lerner
 const UpdateLernerFromDB = async (id: string, payload: Partial<TLerner>) => {
   const { name, ...remainingAdminData } = payload;
 
@@ -30,6 +38,7 @@ const UpdateLernerFromDB = async (id: string, payload: Partial<TLerner>) => {
   return result;
 };
 
+// * Delete Lerner From Db
 const deleteLernerFromDB = async (id: string) => {
   const session = await mongoose.startSession();
 
@@ -73,4 +82,5 @@ export const LernerService = {
   getSingleLernerFromDB,
   deleteLernerFromDB,
   UpdateLernerFromDB,
+  getAllLernerFromDB,
 };
