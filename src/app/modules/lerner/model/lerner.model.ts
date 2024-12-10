@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import { TUserName } from "../../../interface/common/common.type";
-import { Gender } from "../constant/admin.constant";
-import { AdminModel, TAdmin } from "../interface/admin.interface";
+import { Gender } from "../constant/lerner.constant";
+import { LernerModel, TLerner } from "../interface/lerner.interface";
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -18,7 +18,7 @@ const userNameSchema = new Schema<TUserName>({
   },
 });
 
-const adminSchema = new Schema<TAdmin, AdminModel>(
+const lernerSchema = new Schema<TLerner, LernerModel>(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -45,7 +45,6 @@ const adminSchema = new Schema<TAdmin, AdminModel>(
     },
     profileImg: {
       type: String,
-      default: "",
     },
     isDeleted: {
       type: Boolean,
@@ -71,7 +70,7 @@ const adminSchema = new Schema<TAdmin, AdminModel>(
 // });
 
 // filter out deleted documents
-adminSchema.pre("find", function (next) {
+lernerSchema.pre("find", function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
@@ -81,15 +80,15 @@ adminSchema.pre("find", function (next) {
   next();
 }); */
 
-adminSchema.pre("aggregate", function (next) {
+lernerSchema.pre("aggregate", function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
 });
 
-//checking if user is already exist!
-// adminSchema.statics.isUserExists = async function (id: string) {
-//   const existingUser = await Admin.findOne({ id });
+// //checking if user is already exist!
+// lernerSchema.statics.isLernerExists = async function (id: string) {
+//   const existingUser = await Lerner.findOne({ id });
 //   return existingUser;
 // };
 
-export const Admin = model<TAdmin, AdminModel>("Admin", adminSchema);
+export const Lerner = model<TLerner, LernerModel>("Lerner", lernerSchema);

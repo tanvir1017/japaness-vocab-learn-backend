@@ -18,6 +18,8 @@ const UserSchema = new mongoose.Schema<
     password: {
       type: String,
       required: true,
+      minlength: [6, "Password should not be less than 6 character"],
+      maxlength: [18, "Password should not contain more than 18 character"],
       select: 0,
     },
     passwordChangedAt: {
@@ -26,7 +28,7 @@ const UserSchema = new mongoose.Schema<
     role: {
       type: String,
       enum: {
-        values: ["admin", "user"],
+        values: ["admin", "lerner"],
         message: "{VALUE} is not a valid role",
       },
     },
@@ -94,10 +96,10 @@ UserSchema.pre("aggregate", function (next) {
   next();
 });
 
-// TODO => Implement static method for user exist or not
-UserSchema.statics.isUserExistByCustomId = async function (id: string) {
-  return await User.findOne({ id }).select("+password");
-};
+// // TODO => Implement static method for user exist or not
+// UserSchema.statics.isUserExistByCustomId = async function (id: string) {
+//   return await User.findOne({ id }).select("+password");
+// };
 
 // TODO => Implement static method for check password matched
 UserSchema.statics.isPasswordMatched = async function (
@@ -107,11 +109,11 @@ UserSchema.statics.isPasswordMatched = async function (
   return await bcrypt.compare(plainPassword, hashedPassword);
 };
 
-// TODO => check if user blocked or not
-UserSchema.statics.isUserVerified = async function (id: string) {
-  const user = await User.findOne({ id });
-  return user?.status === "not-verified" ? true : false;
-};
+// // TODO => check if user blocked or not
+// UserSchema.statics.isUserVerified = async function (id: string) {
+//   const user = await User.findOne({ id });
+//   return user?.status === "not-verified" ? true : false;
+// };
 
 // TODO => check if the iat of jwt is issued before password change
 UserSchema.statics.isJWTIssuedBeforePasswordChange = function (

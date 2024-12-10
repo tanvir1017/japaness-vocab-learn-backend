@@ -8,26 +8,25 @@ const routes = Router();
 // TODO  => All Router
 
 type TRouteModules = { path: string; routes: Router };
-const router = Router();
 
 const routesModule: TRouteModules[] = [
   {
-    path: "/user",
+    path: "/users",
     routes: UserRoutes,
   },
   {
-    path: "/admin",
+    path: "/admins",
     routes: AdminRoutes,
   },
   {
-    path: "/auth",
+    path: "/auths",
     routes: AuthRoutes,
   },
 ];
 
 // TODO: Implement routes here
-routesModule.forEach(({ path, routes }: TRouteModules) =>
-  routes.use(path, routes),
+routesModule.forEach((item: TRouteModules) =>
+  routes.use(item.path, item.routes),
 );
 
 export default routes;

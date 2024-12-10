@@ -3,6 +3,7 @@ import asyncHandler from "../../../utils/asyncHandler";
 import sendResponse from "../../../utils/sendResponse";
 import { UserServices } from "../service/user.service";
 
+// TODO => Admin creation controller
 const createAdmin = asyncHandler(async (req, res) => {
   const file = req.file;
   const { admin: adminData } = req.body;
@@ -16,6 +17,24 @@ const createAdmin = asyncHandler(async (req, res) => {
     statuscode: httpStatus.CREATED,
     success: true,
     message: "Admin is created successfully",
+    data: result,
+  });
+});
+
+// TODO => Lerner creation controller
+const createLerner = asyncHandler(async (req, res) => {
+  const file = req.file;
+  const { lerner } = req.body;
+
+  const result = await UserServices.createLernerIntoDB(
+    file as Express.Multer.File,
+    lerner,
+  );
+
+  sendResponse(res, {
+    statuscode: httpStatus.CREATED,
+    success: true,
+    message: "User is created successfully",
     data: result,
   });
 });
@@ -46,6 +65,7 @@ const changeStatus = asyncHandler(async (req, res) => {
   });
 });
 export const UserControllers = {
+  createLerner,
   createAdmin,
   changeStatus,
 };

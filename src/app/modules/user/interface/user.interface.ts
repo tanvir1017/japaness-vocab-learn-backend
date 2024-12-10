@@ -5,7 +5,7 @@ export interface TUser {
   email: string;
   password: string;
   passwordChangedAt?: Date;
-  role: "admin" | "user";
+  role: "admin" | "lerner";
   status: "not-verified" | "verified" | "blocked";
   isDeleted: boolean;
 }
