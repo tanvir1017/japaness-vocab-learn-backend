@@ -1,7 +1,6 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Application } from "express";
-import env from "./app/config";
 import globalErrorHandler from "./app/middleware/globalErrorHandler";
 import notFound from "./app/middleware/notFound";
 import routes from "./app/routes/index";
@@ -14,11 +13,8 @@ const app: Application = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: [
-      env.FRONTEND_DEV_ENV01,
-      env.FRONTEND_DEV_ENV02,
-      env.FRONTEND_PRO_ENV,
-    ],
+    origin: "*",
+    credentials: true,
   }),
 );
 app.use(cookieParser());

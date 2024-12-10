@@ -1,4 +1,5 @@
 import httpStatus from "http-status-codes";
+import { JwtPayload } from "jsonwebtoken";
 import mongoose from "mongoose";
 import AppError from "../../../errors/appError";
 import * as AdminInterface from "../../admin/interface/admin.interface";
@@ -137,8 +138,23 @@ const changeStatusOfAnUserFromDB = async (
   return result;
 };
 
+// TODO =>  get individual information by them self
+const getMeFromDB = async (payload: JwtPayload) => {
+  let result = null;
+  if (payload.role === "admin") {
+    result = await Admin.findOne({ email: payload.userEmail }).populate("user");
+    return result;
+  } else {
+    result = await Lerner.findOne({ email: payload.userEmail }).populate(
+      "user",
+    );
+    return result;
+  }
+};
+
 export const UserServices = {
   createAdminIntoDB,
   createLernerIntoDB,
   changeStatusOfAnUserFromDB,
+  getMeFromDB,
 };

@@ -42,17 +42,9 @@ router.route("/create-lerner").post(
 );
 
 // TODO => Find only yourself
-// router
-//   .route("/me")
-//   .get(
-//     authGuard(
-//       USER_ROLE.superAdmin,
-//       USER_ROLE.admin,
-//       USER_ROLE.student,
-//       USER_ROLE.faculty,
-//     ),
-//     UserControllers.getMe,
-//   );
+router
+  .route("/me")
+  .get(authGuard(USER_ROLE.admin, USER_ROLE.lerner), UserControllers.getMe);
 
 // TODO => change user status
 router

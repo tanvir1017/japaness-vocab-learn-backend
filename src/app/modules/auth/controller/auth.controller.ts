@@ -14,10 +14,10 @@ const loginValidation = asyncHandler(async (req, res) => {
     secure: env.isProd,
     httpOnly: true,
   });
-  res.cookie("accessToken", accessToken, {
-    secure: env.isDev,
-    httpOnly: true,
-  });
+  // res.cookie("accessToken", accessToken, {
+  //   secure: env.isProd,
+  //   httpOnly: true,
+  // });
 
   sendResponse(res, {
     statuscode: httpStatus.OK,
