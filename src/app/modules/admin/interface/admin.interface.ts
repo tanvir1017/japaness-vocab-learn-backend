@@ -1,6 +1,6 @@
 import { Model, Types } from "mongoose";
 
-export type TGender = "male" | "female" | "other";
+export type TGender = "male" | "female" | "others";
 
 export type TUserName = {
   firstName: string;
@@ -8,7 +8,6 @@ export type TUserName = {
 };
 
 export type TAdmin = {
-  id: string;
   user: Types.ObjectId;
   name: TUserName;
   gender: TGender;

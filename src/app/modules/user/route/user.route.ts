@@ -11,12 +11,12 @@ const router = Router();
 
 // TODO => Create an admin
 router.route("/create-admin").post(
-  authGuard(USER_ROLE.superAdmin, USER_ROLE.admin),
-  // ? upload the file via multer to /public/uploads folder for temporary basis
+  //authGuard(USER_ROLE.admin),
+  // * upload the file via multer to /public/uploads folder for temporary basis
   upload.single("file"),
-  // ? will parse the for data into Json
+  // * will parse the for data into Json
   parseBodyData(),
-  // ? data validation via zod
+  // *
   sanitizeClientDataViaZod(AdminValidationViaZod.createAdminValidationSchema),
   UserControllers.createAdmin,
 );
@@ -37,9 +37,6 @@ router.route("/create-admin").post(
 // TODO => change user status
 router
   .route("/:id/change-status")
-  .post(
-    authGuard(USER_ROLE.superAdmin, USER_ROLE.admin),
-    UserControllers.changeStatus,
-  );
+  .post(authGuard(USER_ROLE.admin), UserControllers.changeStatus);
 
 export const UserRoutes = router;

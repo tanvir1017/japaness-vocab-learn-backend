@@ -17,7 +17,7 @@ router
 router
   .route("/change-password")
   .post(
-    authGuard(USER_ROLE.admin, USER_ROLE.student, USER_ROLE.faculty),
+    authGuard(USER_ROLE.admin, USER_ROLE.user),
     sanitizeClientDataViaZod(ValidateAuthUserViaZOD.validatePreUser),
     AuthController.changePasswordValidation,
   );

@@ -8,14 +8,15 @@ const routes = Router();
 // TODO  => All Router
 
 type TRouteModules = { path: string; routes: Router };
+const router = Router();
 
 const routesModule: TRouteModules[] = [
   {
-    path: "/users",
+    path: "/user",
     routes: UserRoutes,
   },
   {
-    path: "/admins",
+    path: "/admin",
     routes: AdminRoutes,
   },
   {

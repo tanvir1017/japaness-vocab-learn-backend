@@ -24,7 +24,9 @@ app.use(
 app.use(cookieParser());
 
 //** Routing
-app.get("/api/v1/check", async (req, res) => {
+app.post("/api/v1/check", async (req, res) => {
+  const body = req.body;
+  console.log(body);
   res
     .status(200)
     .json({ message: "Hello from the japanese language learn server!" });
