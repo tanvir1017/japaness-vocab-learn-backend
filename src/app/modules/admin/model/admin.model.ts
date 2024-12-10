@@ -76,20 +76,20 @@ adminSchema.pre("find", function (next) {
   next();
 });
 
-/* adminSchema.pre("findOne", function (next) {
+adminSchema.pre("findOne", function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
-}); */
+});
 
 adminSchema.pre("aggregate", function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
 });
 
-//checking if user is already exist!
-// adminSchema.statics.isUserExists = async function (id: string) {
-//   const existingUser = await Admin.findOne({ id });
-//   return existingUser;
-// };
+// * checking if user is already exist!
+adminSchema.statics.isUserExists = async function (id: string) {
+  const existingUser = await Admin.findById(id);
+  return existingUser;
+};
 
 export const Admin = model<TAdmin, AdminModel>("Admin", adminSchema);

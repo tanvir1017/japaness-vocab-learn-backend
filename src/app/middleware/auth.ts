@@ -19,9 +19,9 @@ export const authGuard = (...requiredRole: TUserRole[]) =>
     //* Verify token
     const decoded = verifyToken(token, env.JWT_ACCESS_TOKEN as string);
 
-    const { role, userId, iat } = decoded;
+    const { role, userEmail, iat } = decoded;
 
-    const user = await User.isUserExistByCustomId(userId);
+    const user = await User.isUserExistByEmail(userEmail);
 
     //* check if user exists in DB by id
     if (!user) {

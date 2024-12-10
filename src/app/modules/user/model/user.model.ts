@@ -19,7 +19,6 @@ const UserSchema = new mongoose.Schema<
       type: String,
       required: true,
       minlength: [6, "Password should not be less than 6 character"],
-      maxlength: [18, "Password should not contain more than 18 character"],
       select: 0,
     },
     passwordChangedAt: {
@@ -51,10 +50,7 @@ const UserSchema = new mongoose.Schema<
   },
 );
 
-// TODO => pre save middle/hooks ware: will work save method
 UserSchema.pre("save", async function (next) {
-  // perform some operations here before saving the document to the database
-
   // TODO => hashing function to has password
   const user = this; // currently processable document
   user.password = await bcrypt.hash(
@@ -62,7 +58,6 @@ UserSchema.pre("save", async function (next) {
     Number(env.BCRYPT_SALT_ROUNDS),
   );
 
-  // calling next function/middleware
   next();
 });
 /* 
@@ -73,20 +68,16 @@ UserSchema.post("save", function (doc, next) {
   next();
 }); */
 
-// * Query Middleware
-
 // TODO => modify return data where deleted data should not go to live
 UserSchema.pre("find", function (next) {
-  // * TODO => The find() method chaining ⛓️‍💥 with the service find() method get ➡️ getAllStudentsFromDB It will check before the service function find() will call and prevent those documents who has isDeleted = true
   this.find({ isDeleted: { $ne: true } });
 
-  // TODO => Calling the next function to do his work
   next();
 });
 
 UserSchema.pre("findOne", function (next) {
   this.find({ isDeleted: { $ne: true } });
-  // TODO => Calling the next function to do his work
+
   next();
 });
 
@@ -96,10 +87,10 @@ UserSchema.pre("aggregate", function (next) {
   next();
 });
 
-// // TODO => Implement static method for user exist or not
-// UserSchema.statics.isUserExistByCustomId = async function (id: string) {
-//   return await User.findOne({ id }).select("+password");
-// };
+// TODO => Implement static method for user exist or not
+UserSchema.statics.isUserExistByEmail = async function (email: string) {
+  return await User.findOne({ email }).select("+password");
+};
 
 // TODO => Implement static method for check password matched
 UserSchema.statics.isPasswordMatched = async function (
@@ -110,10 +101,10 @@ UserSchema.statics.isPasswordMatched = async function (
 };
 
 // // TODO => check if user blocked or not
-// UserSchema.statics.isUserVerified = async function (id: string) {
-//   const user = await User.findOne({ id });
-//   return user?.status === "not-verified" ? true : false;
-// };
+UserSchema.statics.isUserVerified = async function (id: string) {
+  const user = await User.findOne({ id });
+  return user?.status === "not-verified" ? true : false;
+};
 
 // TODO => check if the iat of jwt is issued before password change
 UserSchema.statics.isJWTIssuedBeforePasswordChange = function (

@@ -5,29 +5,18 @@ import env from "../../../config";
 import AppError from "../../../errors/appError";
 import { sendEmail } from "../../../utils/send-email";
 import { User } from "../../user/model/user.model";
-import { PasswordData, TLoginUser } from "../interface/auth.interface";
+import {
+  TLoginUser,
+  TPasswordChangeProperty,
+} from "../interface/auth.interface";
 import { createToken, verifyToken } from "../utils/auth.utils";
-
-// TODO => validate BLOCK | WRONG PASSWORD | EXISTENCE of an user
-const validateBlockPasswordExistenceOfAnUser = async (userId: string) => {};
 
 // TODO: Implement function to validate user credentials
 const loginValidateUser = async (payload: TLoginUser) => {
-  const user = await User.isUserExistByCustomId(payload.id);
+  const user = await User.isUserExistByEmail(payload.email);
 
-  //* check if user exists in DB by id
   if (!user) {
     throw new AppError(400, "user doesn't exist");
-  }
-
-  //* check if the user is deleted(soft) or not
-  if (user.isDeleted) {
-    throw new AppError(400, "User is not exist maybe deleted");
-  }
-
-  //* check if the user is blocked or not
-  if (user.status === "blocked") {
-    throw new AppError(400, "User is blocked by admin");
   }
 
   //* check if password is matched or not
@@ -35,7 +24,7 @@ const loginValidateUser = async (payload: TLoginUser) => {
     throw new AppError(400, "Password and user doesn't match");
   }
 
-  //* access granted. and return token to client
+  //* access granted and return token to client
   const jwtPayload = {
     userEmail: user.email,
     role: user.role,
@@ -62,26 +51,14 @@ const loginValidateUser = async (payload: TLoginUser) => {
 // TODO => Change password implementation
 const changeOldPassword = async (
   userData: JwtPayload,
-  payload: PasswordData,
+  payload: TPasswordChangeProperty,
 ) => {
-  const user = await User.isUserExistByCustomId(userData.userId);
+  const user = await User.isUserExistByEmail(userData.userEmail);
 
-  //* check if user exists in DB by id
   if (!user) {
     throw new AppError(400, "user doesn't exist");
   }
 
-  //* check if the user is deleted(soft) or not
-  if (user.isDeleted) {
-    throw new AppError(400, "User is not exist maybe deleted");
-  }
-
-  //* check if the user is blocked or not
-  if (user.status === "blocked") {
-    throw new AppError(400, "User is blocked by admin");
-  }
-
-  //* check if password is matched or not
   if (!(await User.isPasswordMatched(payload.oldPassword, user.password))) {
     throw new AppError(400, "Password and user doesn't match");
   }
@@ -93,10 +70,9 @@ const changeOldPassword = async (
   );
 
   const result = await User.findOneAndUpdate(
-    { id: userData.userId, role: userData.role },
+    { email: userData.userEmail, role: userData.role },
     {
       password: newHashedPassword,
-      needsPasswordChange: false,
       passwordChangedAt: new Date(),
     },
     { new: true, runValidators: true },
@@ -110,9 +86,9 @@ const refreshTokenGenerate = async (token: string) => {
   //* Verify token
   const decoded = verifyToken(token, env.JWT_REFRESH_TOKEN as string);
 
-  const { userId, iat } = decoded;
+  const { userEmail, iat } = decoded;
 
-  const user = await User.isUserExistByCustomId(userId);
+  const user = await User.isUserExistByEmail(userEmail);
 
   //* check if user exists in DB by id
   if (!user) {
@@ -152,8 +128,8 @@ const refreshTokenGenerate = async (token: string) => {
 };
 
 // TODO => Forget Password
-const forgetPassword = async (userId: string) => {
-  const user = await User.isUserExistByCustomId(userId);
+const forgetPassword = async (userEmail: string) => {
+  const user = await User.isUserExistByEmail(userEmail);
 
   //* check if user exists in DB by id
   if (!user) {
@@ -183,10 +159,10 @@ const forgetPassword = async (userId: string) => {
 
 // TODO => Reset Password
 const resetPassword = async (
-  payload: { id: string; newPassword: string },
+  payload: { userEmail: string; newPassword: string },
   token: string,
 ) => {
-  const user = await User.isUserExistByCustomId(payload?.id);
+  const user = await User.isUserExistByEmail(payload?.userEmail);
 
   //* check if user exists in DB by id
   if (!user) {
@@ -205,7 +181,7 @@ const resetPassword = async (
 
   //* verify token
   const decoded = verifyToken(token, env.JWT_ACCESS_TOKEN!);
-  if (decoded && decoded.userId !== payload.id) {
+  if (decoded && decoded.userEmail !== payload.userEmail) {
     throw new AppError(httpStatus.FORBIDDEN, "Forbidden user!");
   }
 

@@ -8,7 +8,7 @@ import { ValidateAuthUserViaZOD } from "../validation/auth.validation";
 const router = Router();
 
 router
-  .route("/login")
+  .route("/signin")
   .post(
     sanitizeClientDataViaZod(ValidateAuthUserViaZOD.validateLoginUser),
     AuthController.loginValidation,

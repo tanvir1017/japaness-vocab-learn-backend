@@ -11,19 +11,15 @@ export interface TUser {
 }
 
 export interface UserModel extends mongoose.Model<TUser> {
-  //** checking user exist or not */
-  isUserExistByCustomId: (id: string) => Promise<TUser>;
+  isUserExistByEmail: (email: string) => Promise<TUser>;
 
-  //** check password match or not*/
   isPasswordMatched: (
     plainPassword: string,
     hashedPassword: string,
   ) => Promise<boolean>;
 
-  //** check is user blocked or not*/
   isUserVerified: (id: string) => Promise<boolean>;
 
-  //** revalidate jwt issued after password change
   isJWTIssuedBeforePasswordChange: (
     passwordChangeTimeStamp: Date,
     jwtIssuedIAT: number,

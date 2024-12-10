@@ -1,11 +1,11 @@
-import express from "express";
+import { Router } from "express";
 import sanitizeClientDataViaZod from "../../../middleware/sanitizeClientDataViaZod";
 import { AdminControllers } from "../controller/admin.controller";
 import { AdminValidationViaZod } from "../validation/admin.validation";
 
-const router = express.Router();
+const router = Router();
 
-router.route("/all").get(AdminControllers.getAllAdmins);
+router.route("/").get(AdminControllers.getAllAdmins);
 
 router.route("/:id").get(AdminControllers.getSingleAdmin);
 

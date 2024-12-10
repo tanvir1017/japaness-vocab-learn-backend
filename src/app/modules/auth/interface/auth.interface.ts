@@ -1,8 +1,8 @@
 export type TLoginUser = {
-  id: string;
+  email: string;
   password: string;
 };
-export type PasswordData = {
+export type TPasswordChangeProperty = {
   oldPassword: string;
   newPassword: string;
 };

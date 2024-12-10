@@ -16,11 +16,11 @@ const routesModule: TRouteModules[] = [
     routes: UserRoutes,
   },
   {
-    path: "/admins",
+    path: "/admin",
     routes: AdminRoutes,
   },
   {
-    path: "/auths",
+    path: "/auth",
     routes: AuthRoutes,
   },
   {
