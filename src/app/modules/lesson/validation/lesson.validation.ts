@@ -13,7 +13,6 @@ export const updateLessonValidationSchema = z.object({
   body: z.object({
     title: z.string().min(5, "Title is required").optional(),
     lessonNo: z.string().min(1, "Lesson number is required").optional(),
-    isDeleted: z.boolean(),
   }),
 });
 

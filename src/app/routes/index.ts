@@ -3,7 +3,9 @@ import { AdminRoutes } from "../modules/admin/route/admin.route";
 import { AuthRoutes } from "../modules/auth/route/auth.route";
 import { LernersRoutes } from "../modules/lerner/route/lerner.route";
 import { LessonsRoutes } from "../modules/lesson/route/lesson.route";
+import { TutorialsRoutes } from "../modules/tutorial/route/tutorial.route";
 import { UserRoutes } from "../modules/user/route/user.route";
+import { VocabulariesRoutes } from "../modules/vocabulary/route/vocabulary.route";
 
 const routes = Router();
 
@@ -31,6 +33,14 @@ const routesModule: TRouteModules[] = [
   {
     path: "/lesson",
     routes: LessonsRoutes,
+  },
+  {
+    path: "/vocabulary",
+    routes: VocabulariesRoutes,
+  },
+  {
+    path: "/tutorial",
+    routes: TutorialsRoutes,
   },
 ];
 

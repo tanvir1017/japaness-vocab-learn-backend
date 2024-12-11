@@ -56,8 +56,8 @@ const createLesson = asyncHandler(async (req, res) => {
 // * Update Lesson from db
 const updateLesson = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const lesson = req.body;
-  const result = await LessonService.UpdateLessonFromDB(id, lesson);
+
+  const result = await LessonService.UpdateLessonFromDB(id, req.body);
 
   sendResponse(res, {
     statuscode: httpStatus.OK,

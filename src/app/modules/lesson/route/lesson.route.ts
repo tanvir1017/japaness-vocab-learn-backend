@@ -28,7 +28,7 @@ router
 
 // * Route that responsible for update the Lesson information
 router
-  .route("update/:id")
+  .route("/:id/update")
   .patch(
     sanitizeClientDataViaZod(
       LessonValidationViaZod.updateLessonValidationSchema,
@@ -37,6 +37,6 @@ router
   );
 
 // * Route that responsible for soft delete the Lesson
-router.route("/delete/:id").delete(LessonController.deleteLesson);
+router.route("/:id/delete").delete(LessonController.deleteLesson);
 
 export const LessonsRoutes = router;
