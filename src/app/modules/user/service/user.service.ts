@@ -8,13 +8,9 @@ import * as LernerInterface from "../../lerner/interface/lerner.interface";
 import { Lerner } from "../../lerner/model/lerner.model";
 import { TUser } from "../interface/user.interface";
 import { User } from "../model/user.model";
-import constructUrlAndImageUploaderUtil from "../utils/constructCloudinaryUrlAndUploadImage";
 
 // TODO =>  Create admin record in DB simultaneously when creating a new user
-const createAdminIntoDB = async (
-  file: Express.Multer.File,
-  payload: AdminInterface.TAdmin,
-) => {
+const createAdminIntoDB = async (payload: AdminInterface.TAdmin) => {
   // create a user object
   const userData: Partial<TUser> = {};
 
@@ -40,15 +36,6 @@ const createAdminIntoDB = async (
       throw new AppError(httpStatus.BAD_REQUEST, "Failed to create admin");
     }
 
-    // uploading img into cloudinary
-    if (file) {
-      const imageUploader = await constructUrlAndImageUploaderUtil(
-        payload,
-        file,
-      );
-      payload.profileImg = imageUploader.secure_url; // injecting uploaded file
-    }
-
     payload.user = newUser[0]._id; // * reference _id
 
     // * create a admin (transaction-2)
@@ -70,10 +57,7 @@ const createAdminIntoDB = async (
 };
 
 // TODO: Create learner record in DB simultaneously when creating a new user
-const createLernerIntoDB = async (
-  file: Express.Multer.File,
-  payload: LernerInterface.TLerner,
-) => {
+const createLernerIntoDB = async (payload: LernerInterface.TLerner) => {
   // create a user object
   const userData: Partial<TUser> = {};
 
@@ -95,15 +79,6 @@ const createLernerIntoDB = async (
     // * create a admin
     if (!newUser.length) {
       throw new AppError(httpStatus.BAD_REQUEST, "Failed to create lerner");
-    }
-
-    // uploading img into cloudinary
-    if (file) {
-      const imageUploader = await constructUrlAndImageUploaderUtil(
-        payload,
-        file,
-      );
-      payload.profileImg = imageUploader.secure_url; // injecting uploaded file
     }
 
     payload.user = newUser[0]._id; // * reference _id

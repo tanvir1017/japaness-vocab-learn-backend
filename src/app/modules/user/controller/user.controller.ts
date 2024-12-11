@@ -5,13 +5,9 @@ import { UserServices } from "../service/user.service";
 
 // TODO => Admin creation controller
 const createAdmin = asyncHandler(async (req, res) => {
-  const file = req.file;
   const { admin: adminData } = req.body;
 
-  const result = await UserServices.createAdminIntoDB(
-    file as Express.Multer.File,
-    adminData,
-  );
+  const result = await UserServices.createAdminIntoDB(adminData);
 
   sendResponse(res, {
     statuscode: httpStatus.CREATED,
@@ -23,26 +19,21 @@ const createAdmin = asyncHandler(async (req, res) => {
 
 // TODO => Lerner creation controller
 const createLerner = asyncHandler(async (req, res) => {
-  const file = req.file;
   const { lerner } = req.body;
 
-  const result = await UserServices.createLernerIntoDB(
-    file as Express.Multer.File,
-    lerner,
-  );
+  const result = await UserServices.createLernerIntoDB(lerner);
 
   sendResponse(res, {
     statuscode: httpStatus.CREATED,
     success: true,
     message: "User is created successfully",
-    data: result,
+    data: lerner,
   });
 });
 
 // Todo => Get me route
 const getMe = asyncHandler(async (req, res) => {
   const user = req.user;
-  console.log("🚀 ~ getMe ~ user:", user);
 
   const result = await UserServices.getMeFromDB(user);
 

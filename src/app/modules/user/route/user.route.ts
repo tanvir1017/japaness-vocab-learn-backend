@@ -1,7 +1,5 @@
 import { Router } from "express";
 import { authGuard } from "../../../middleware/auth";
-import { upload } from "../../../middleware/multer";
-import parseBodyData from "../../../middleware/parse-bodyData";
 import sanitizeClientDataViaZod from "../../../middleware/sanitizeClientDataViaZod";
 import { AdminValidationViaZod } from "../../admin/validation/admin.validation";
 import { LernerValidationViaZod } from "../../lerner/validation/lerner.validation";
@@ -12,13 +10,6 @@ const router = Router();
 
 // TODO => Create an admin
 router.route("/create-admin").post(
-  //authGuard(USER_ROLE.admin),
-  // * upload the file via multer to /public/uploads folder for temporary basis
-  upload.single("file"),
-
-  // * will parse the for data into Json
-  parseBodyData(),
-
   // * client data validation or sanitization 👌
   sanitizeClientDataViaZod(AdminValidationViaZod.createAdminValidationSchema),
 
@@ -28,12 +19,6 @@ router.route("/create-admin").post(
 
 // TODO => Create a lerner
 router.route("/create-lerner").post(
-  // * upload the file via multer to /public/uploads folder for temporary basis
-  upload.single("file"),
-
-  // * will parse the for data into Json
-  parseBodyData(),
-
   // * client data validation or sanitization 👌
   sanitizeClientDataViaZod(LernerValidationViaZod.createLernerValidationSchema),
 

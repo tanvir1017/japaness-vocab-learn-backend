@@ -1,6 +1,8 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Application } from "express";
+import corsOptions from "./app/config/corsOption";
+import credentials from "./app/middleware/credential";
 import globalErrorHandler from "./app/middleware/globalErrorHandler";
 import notFound from "./app/middleware/notFound";
 import routes from "./app/routes/index";
@@ -11,12 +13,16 @@ const app: Application = express();
 
 // ** Parser
 app.use(express.json());
-app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-  }),
-);
+
+// Handle options credentials check - before CORS!
+// and fetch cookies credentials requirement
+app.use(credentials);
+
+// Cross Origin Resource Sharing
+app.use(cors(corsOptions));
+
+// built-in middleware to handle urlencoded form data
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 //** Routing
