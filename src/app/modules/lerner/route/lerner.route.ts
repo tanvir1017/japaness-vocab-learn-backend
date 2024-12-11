@@ -7,6 +7,7 @@ const router = Router();
 
 // * Route that responsible for find individual Lerner by `email`
 router.route("/:id").get(LernerController.getSingleLerner);
+router.route("/email/:email").get(LernerController.getLernerByEmail);
 
 // * Route that responsible for find all lerner exist on db
 router.route("/").get(LernerController.getAllLerner);

@@ -13,8 +13,10 @@ async function main() {
     await seedSuperAdmin();
 
     // Listener
-    server = app.listen(Number(env.PORT), "192.168.31.138", () => {
-      console.log(`Server running on http://192.168.31.138:${env.PORT}`);
+    server = app.listen(Number(env.PORT), () => {
+      console.log(
+        `Server running on http://localhost:${env.PORT}/api/v1/check`,
+      );
     });
   } catch (error) {
     console.error("Failed to connect to MongoDB", error);

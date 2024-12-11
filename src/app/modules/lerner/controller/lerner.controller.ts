@@ -16,6 +16,19 @@ const getSingleLerner = asyncHandler(async (req, res) => {
   });
 });
 
+// * Get single/individual Lerner
+const getLernerByEmail = asyncHandler(async (req, res) => {
+  const { email } = req.params;
+  const result = await LernerService.getLernerFromDBByEmail(email);
+
+  sendResponse(res, {
+    statuscode: httpStatus.OK,
+    success: true,
+    message: "Lerner is retrieved successfully",
+    data: result,
+  });
+});
+
 // * Get all Lerner from db
 const getAllLerner = asyncHandler(async (req, res) => {
   const result = await LernerService.getAllLernerFromDB();
@@ -58,5 +71,6 @@ export const LernerController = {
   getSingleLerner,
   getAllLerner,
   updateLerner,
+  getLernerByEmail,
   deleteLerner,
 };

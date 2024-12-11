@@ -27,9 +27,7 @@ app.use(cookieParser());
 
 //** Routing
 app.get("/api/v1/check", async (req, res) => {
-  res
-    .status(200)
-    .json({ message: "Hello from the japanese language learn server!" });
+  res.status(200).json({ message: "Hello from the Vocabulary learn server!" });
 });
 
 // TODO => Using routes for whole application

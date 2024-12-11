@@ -11,6 +11,12 @@ const getSingleLernerFromDB = async (id: string) => {
   return result;
 };
 
+// * Get single lerner by Object Id from db
+const getLernerFromDBByEmail = async (email: string) => {
+  const result = await Lerner.findOne({ email });
+  return result;
+};
+
 // * Get all Lerner From Db
 const getAllLernerFromDB = async () => {
   const result = await Lerner.find({});
@@ -83,4 +89,5 @@ export const LernerService = {
   deleteLernerFromDB,
   UpdateLernerFromDB,
   getAllLernerFromDB,
+  getLernerFromDBByEmail,
 };
