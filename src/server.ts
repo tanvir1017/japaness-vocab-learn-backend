@@ -2,7 +2,6 @@ import { Server } from "http";
 import mongoose from "mongoose";
 import app from "./app";
 import env from "./app/config";
-import seedSuperAdmin from "./app/DB";
 
 let server: Server;
 
@@ -10,7 +9,7 @@ async function main() {
   try {
     await mongoose.connect(env.DATABASE_URL as string);
 
-    await seedSuperAdmin();
+    // await seedSuperAdmin();
 
     // Listener
     server = app.listen(Number(env.PORT), () => {

@@ -16,6 +16,21 @@ const getSingleVocabulary = asyncHandler(async (req, res) => {
   });
 });
 
+// * Get single/individual Vocabulary
+const getVocabularyListByLessonID = asyncHandler(async (req, res) => {
+  const { lessonID } = req.params;
+
+  const result =
+    await VocabularyService.getVocabularyListByLessonIDFromDb(lessonID);
+
+  sendResponse(res, {
+    statuscode: httpStatus.OK,
+    success: true,
+    message: "Vocabulary is retrieved successfully",
+    data: result,
+  });
+});
+
 // * Get all Vocabulary from db
 const getAllVocabulary = asyncHandler(async (req, res) => {
   const result = await VocabularyService.getAllVocabularyFromDB();
@@ -31,8 +46,10 @@ const getAllVocabulary = asyncHandler(async (req, res) => {
 // * Get all Vocabulary from db
 const getAllVocabularyByLessonId = asyncHandler(async (req, res) => {
   const { lessonId } = req.params;
-  const result =
-    await VocabularyService.getAllVocabularyBasedOnLessonIdFromDB(lessonId);
+  const result = await VocabularyService.getAllVocabularyBasedOnLessonIdFromDB(
+    req.query,
+    lessonId,
+  );
 
   sendResponse(res, {
     statuscode: httpStatus.OK,
@@ -90,4 +107,5 @@ export const VocabularyController = {
   updateVocabulary,
   deleteVocabulary,
   createVocabulary,
+  getVocabularyListByLessonID,
 };

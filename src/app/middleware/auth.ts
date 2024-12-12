@@ -36,11 +36,6 @@ export const authGuard = (...requiredRole: TUserRole[]) =>
       );
     }
 
-    //* check if the user is blocked or not
-    if (user.status === "blocked") {
-      throw new AppError(httpStatus.BAD_REQUEST, "User is blocked by admin");
-    }
-
     if (
       user.passwordChangedAt &&
       User.isJWTIssuedBeforePasswordChange(

@@ -2,14 +2,38 @@ import bcrypt from "bcrypt";
 import mongoose, { model } from "mongoose";
 
 import env from "../../../config";
-import { USER_STATUS } from "../constant/user.constant";
+import {
+  T_GENDER_COMMON__TYPE,
+  TUserName,
+} from "../../../interface/common/common.type";
 import * as TUserInterface from "../interface/user.interface";
+
+const userNameSchema = new mongoose.Schema<TUserName>({
+  firstName: {
+    type: String,
+    required: [true, "First Name is required"],
+    trim: true,
+    maxlength: [20, "Name can not be more than 20 characters"],
+  },
+  lastName: {
+    type: String,
+    trim: true,
+    required: [true, "Last Name is required"],
+    maxlength: [20, "Name can not be more than 20 characters"],
+  },
+});
+
+export const Gender: T_GENDER_COMMON__TYPE[] = ["male", "female", "others"];
 
 const UserSchema = new mongoose.Schema<
   TUserInterface.TUser,
   TUserInterface.UserModel
 >(
   {
+    name: {
+      type: userNameSchema,
+      required: [true, "Name is required"],
+    },
     email: {
       type: String,
       required: true,
@@ -21,23 +45,25 @@ const UserSchema = new mongoose.Schema<
       minlength: [6, "Password should not be less than 6 character"],
       select: 0,
     },
-    passwordChangedAt: {
-      type: Date,
-    },
     role: {
       type: String,
       enum: {
         values: ["admin", "lerner"],
         message: "{VALUE} is not a valid role",
       },
+      default: "lerner",
     },
-    status: {
+    profileImg: {
+      type: String,
+      default: "",
+    },
+    gender: {
       type: String,
       enum: {
-        values: USER_STATUS,
-        message: "{VALUE} is not a valid status",
+        values: Gender,
+        message: "{VALUE} is not a valid gender",
       },
-      default: "not-verified",
+      required: [true, "Gender is required"],
     },
     isDeleted: {
       type: Boolean,
@@ -60,13 +86,6 @@ UserSchema.pre("save", async function (next) {
 
   next();
 });
-/* 
-// TODO => Post save middle/hooks ware: work after save method
-UserSchema.post("save", function (doc, next) {
-  // TODO => Post save middle/hooks function will have two parameters doc, next
-  doc.password = ""; // making password empty
-  next();
-}); */
 
 // TODO => modify return data where deleted data should not go to live
 UserSchema.pre("find", function (next) {
@@ -98,12 +117,6 @@ UserSchema.statics.isPasswordMatched = async function (
   hashedPassword: string,
 ) {
   return await bcrypt.compare(plainPassword, hashedPassword);
-};
-
-// // TODO => check if user blocked or not
-UserSchema.statics.isUserVerified = async function (id: string) {
-  const user = await User.findOne({ id });
-  return user?.status === "not-verified" ? true : false;
 };
 
 // TODO => check if the iat of jwt is issued before password change

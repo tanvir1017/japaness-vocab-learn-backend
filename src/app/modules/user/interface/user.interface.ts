@@ -1,12 +1,18 @@
 import mongoose from "mongoose";
+import { T_GENDER_COMMON__TYPE } from "../../../interface/common/common.type";
 import { USER_ROLE } from "../constant/user.constant";
 
 export interface TUser {
+  name: {
+    firstName: string;
+    lastName: string;
+  };
+  profileImg: string;
+  gender: T_GENDER_COMMON__TYPE;
   email: string;
   password: string;
   passwordChangedAt?: Date;
   role: "admin" | "lerner";
-  status: "not-verified" | "verified" | "blocked";
   isDeleted: boolean;
 }
 

@@ -3,63 +3,82 @@ import asyncHandler from "../../../utils/asyncHandler";
 import sendResponse from "../../../utils/sendResponse";
 import { UserServices } from "../service/user.service";
 
-// TODO => Admin creation controller
-const createAdmin = asyncHandler(async (req, res) => {
-  const { admin: adminData } = req.body;
-
-  const result = await UserServices.createAdminIntoDB(adminData);
+const getSingleUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const result = await UserServices.getUserFromDbById(id);
 
   sendResponse(res, {
-    statuscode: httpStatus.CREATED,
+    statuscode: httpStatus.OK,
     success: true,
-    message: "Admin is created successfully",
+    message: "User is retrieved successfully",
     data: result,
   });
 });
 
-// TODO => Lerner creation controller
-const createLerner = asyncHandler(async (req, res) => {
-  const { lerner } = req.body;
+const getSingleUserByMail = asyncHandler(async (req, res) => {
+  const { email } = req.params;
+  const result = await UserServices.getUserFromDbByEmail(email);
 
-  const result = await UserServices.createLernerIntoDB(lerner);
+  sendResponse(res, {
+    statuscode: httpStatus.OK,
+    success: true,
+    message: "User is retrieved successfully",
+    data: result,
+  });
+});
+
+const createUser = asyncHandler(async (req, res) => {
+  const result = await UserServices.createUserIntoDB(req.body);
 
   sendResponse(res, {
     statuscode: httpStatus.CREATED,
     success: true,
     message: "User is created successfully",
-    data: lerner,
+    data: result,
+  });
+});
+
+const updateUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const result = await UserServices.updateUserIntoDB(id, req.body);
+
+  sendResponse(res, {
+    statuscode: httpStatus.OK,
+    success: true,
+    message: "User is update successfully",
+    data: result,
+  });
+});
+
+const deleteUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const result = await UserServices.deleteUserFromDb(id);
+
+  sendResponse(res, {
+    statuscode: httpStatus.OK,
+    success: true,
+    message: "User is deleted successfully",
+    data: result,
   });
 });
 
 // Todo => Get me route
-const getMe = asyncHandler(async (req, res) => {
-  const user = req.user;
-
-  const result = await UserServices.getMeFromDB(user);
+const getAllUsers = asyncHandler(async (req, res) => {
+  const result = await UserServices.getAllUsersFromDb();
 
   sendResponse(res, {
     statuscode: httpStatus.OK,
     success: true,
-    message: "I found myself successfully", // returns a success message if the login is successful.
+    message: "users retrieve successfully", // returns a success message if the login is successful.
     data: result, // returns the validated user data or an error message if the login fails.
   });
 });
 
-// Todo => change user status controller
-const changeStatus = asyncHandler(async (req, res) => {
-  const id = req.params.id;
-  const result = await UserServices.changeStatusOfAnUserFromDB(id, req.body);
-
-  sendResponse(res, {
-    statuscode: httpStatus.OK,
-    success: true,
-    message: "Status changed successfully", // returns a success message if the login is successful.
-    data: result, // returns the validated user data or an error message if the login fails.
-  });
-});
 export const UserControllers = {
-  createLerner,
-  createAdmin,
-  changeStatus,
-  getMe,
+  createUser,
+  updateUser,
+  getAllUsers,
+  deleteUser,
+  getSingleUser,
+  getSingleUserByMail,
 };

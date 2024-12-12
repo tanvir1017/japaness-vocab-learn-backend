@@ -29,15 +29,7 @@ const getAllLessonNoListFromDB = async () => {
 
 // * Get all Lesson From Db
 const createLessonIntoDB = async (payload: TLesson) => {
-  //user?: JwtPayload,
-  // const userId = await User.findOne({ role: "admin", email: user?.userEmail });
-  // if (!userId) {
-  //   throw new AppError(httpStatus.FORBIDDEN, "Only admin can create lesson");
-  // }
-  const result = await Lesson.create({
-    ...payload,
-    user: "67597eb3dfe3e170e669315c",
-  });
+  const result = await Lesson.create(payload);
   return result;
 };
 

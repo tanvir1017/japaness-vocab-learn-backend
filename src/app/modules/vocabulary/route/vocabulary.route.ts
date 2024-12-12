@@ -11,6 +11,11 @@ router.route("/").get(VocabularyController.getAllVocabulary);
 // * Route that responsible for find individual Vocabulary by `by _id`
 router.route("/:id").get(VocabularyController.getSingleVocabulary);
 
+// * Route that responsible for find individual Vocabulary by `by _id`
+router
+  .route("/:lessonID/vocab-list")
+  .get(VocabularyController.getVocabularyListByLessonID);
+
 // * Route that responsible for find all Vocabularies under a lesson by `by _id`
 router
   .route("/:lessonId/lesson-based")

@@ -1,5 +1,7 @@
-import httpStatus from "http-status-codes";
+import httpStatus, { StatusCodes } from "http-status-codes";
+import QueryBuilder from "../../../builder/QueryBuilder";
 import AppError from "../../../errors/appError";
+import { Lesson } from "../../lesson/model/lesson.model";
 import { TVocabulary } from "../interface/vocabulary.interface";
 import { Vocabulary } from "../model/vocabulary.model";
 
@@ -12,16 +14,39 @@ const getSingleVocabulary = async (id: string) => {
   return result;
 };
 
+// * Get single Vocabulary by Object Id from db
+const getVocabularyListByLessonIDFromDb = async (lessonID: string) => {
+  const result = await Vocabulary.find({ lesson: lessonID }).countDocuments();
+  return result;
+};
+
 // * Get all Vocabulary From Db
-const getAllVocabularyBasedOnLessonIdFromDB = async (lessonId: string) => {
-  const result = await Vocabulary.find({
-    lesson: lessonId,
-    isDeleted: { $ne: true },
-  });
+const getAllVocabularyBasedOnLessonIdFromDB = async (
+  query: Record<string, unknown>,
+  lessonNo: string,
+) => {
+  const lessonId = await Lesson.findOne({ lessonNo });
+  if (!lessonId) {
+    throw new AppError(
+      StatusCodes.NOT_FOUND,
+      `Lesson Not Found By This Lesson No`,
+    );
+  }
+
+  const vocabQuery = new QueryBuilder(
+    Vocabulary.find({
+      lesson: lessonId,
+      isDeleted: { $ne: true },
+    }).populate("lesson"),
+    query,
+  ).paginate();
+  const result = await vocabQuery.modelQuery;
+  const meta = await vocabQuery.countTotal();
+
   if (result === null) {
     throw new AppError(httpStatus.NOT_FOUND, "No Vocabulary found");
   }
-  return result;
+  return { meta, result };
 };
 
 // * Get all Vocabulary From Db
@@ -31,19 +56,8 @@ const getAllVocabularyFromDB = async () => {
 };
 
 // * Get all Vocabulary From Db
-const createVocabularyIntoDB = async (
-  //user?: JwtPayload,
-  payload: TVocabulary,
-) => {
-  //const userId = await User.findOne({ role: "admin", email: user?.userEmail });
-  const userId = "67597eb3dfe3e170e669315c";
-  if (!userId) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "Only admin can create Vocabulary",
-    );
-  }
-  const result = await Vocabulary.create({ ...payload, user: userId });
+const createVocabularyIntoDB = async (payload: TVocabulary) => {
+  const result = await Vocabulary.create(payload);
   return result;
 };
 
@@ -82,4 +96,5 @@ export const VocabularyService = {
   UpdateVocabularyFromDB,
   deleteVocabularyFromDB,
   createVocabularyIntoDB,
+  getVocabularyListByLessonIDFromDb,
 };

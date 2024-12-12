@@ -55,7 +55,6 @@ const getAllLessonList = asyncHandler(async (req, res) => {
 
 // * Get all Lesson from db
 const createLesson = asyncHandler(async (req, res) => {
-  // const result = await LessonService.createLessonIntoDB(req.user, req.body);
   const result = await LessonService.createLessonIntoDB(req.body);
 
   sendResponse(res, {

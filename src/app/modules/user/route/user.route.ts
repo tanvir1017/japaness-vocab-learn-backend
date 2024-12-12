@@ -1,39 +1,42 @@
 import { Router } from "express";
-import { authGuard } from "../../../middleware/auth";
 import sanitizeClientDataViaZod from "../../../middleware/sanitizeClientDataViaZod";
-import { AdminValidationViaZod } from "../../admin/validation/admin.validation";
-import { LernerValidationViaZod } from "../../lerner/validation/lerner.validation";
-import { USER_ROLE } from "../constant/user.constant";
 import { UserControllers } from "../controller/user.controller";
+import { UserSchemaValidationZOD } from "../validation/user.validation";
 
 const router = Router();
 
-// TODO => Create an admin
-router.route("/create-admin").post(
-  // * client data validation or sanitization 👌
-  sanitizeClientDataViaZod(AdminValidationViaZod.createAdminValidationSchema),
+// TODO => Find only yourself
+router.route("/all").get(UserControllers.getAllUsers);
 
-  // * Calling Service
-  UserControllers.createAdmin,
-);
+router.route("/email/:email").get(UserControllers.getSingleUserByMail);
+// TODO => Update User
+router.route("/:id").get(UserControllers.getSingleUser);
 
 // TODO => Create a lerner
-router.route("/create-lerner").post(
+router.route("/create-user").post(
   // * client data validation or sanitization 👌
-  sanitizeClientDataViaZod(LernerValidationViaZod.createLernerValidationSchema),
-
-  // * Calling Service
-  UserControllers.createLerner,
+  sanitizeClientDataViaZod(UserSchemaValidationZOD.createUserValidationSchema),
+  UserControllers.createUser,
 );
 
+// TODO => Update User
+router.route("/:id/update").patch(
+  // * client data validation or sanitization 👌
+  sanitizeClientDataViaZod(UserSchemaValidationZOD.updateUserValidationSchema),
+  UserControllers.updateUser,
+);
+
+// TODO => Delete User
+router.route("/:id/delete").delete(UserControllers.deleteUser);
+
 // TODO => Find only yourself
-router
-  .route("/me")
-  .get(authGuard(USER_ROLE.admin, USER_ROLE.lerner), UserControllers.getMe);
+// router
+//   .route("/me")
+//   .get(authGuard(USER_ROLE.admin, USER_ROLE.lerner), UserControllers.getMe);
 
 // TODO => change user status
-router
-  .route("/:id/change-status")
-  .post(authGuard(USER_ROLE.admin), UserControllers.changeStatus);
+// router
+//   .route("/:id/change-status")
+//   .post(authGuard(USER_ROLE.admin), UserControllers.changeStatus);
 
 export const UserRoutes = router;

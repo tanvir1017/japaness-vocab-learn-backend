@@ -8,9 +8,9 @@ export type TLerner = {
   user: Types.ObjectId;
   name: TUserName;
   password: string;
-  gender: T_GENDER_COMMON__TYPE;
   email: string;
   profileImg: string;
+  gender: T_GENDER_COMMON__TYPE;
   isDeleted: boolean;
 };
 

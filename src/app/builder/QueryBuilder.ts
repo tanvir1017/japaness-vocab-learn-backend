@@ -9,21 +9,6 @@ class QueryBuilder<T> {
     this.query = query;
   }
 
-  search(searchAbleField: string[]) {
-    const searchTerm = this?.query?.searchTerm;
-    if (searchTerm) {
-      this.modelQuery = this.modelQuery.find({
-        $or: searchAbleField.map(
-          (field: string) =>
-            ({
-              [field]: { $regex: searchTerm, $options: "i" },
-            }) as FilterQuery<T>,
-        ),
-      });
-    }
-    return this;
-  }
-
   filter() {
     const queryObj = { ...this.query };
 
@@ -46,7 +31,7 @@ class QueryBuilder<T> {
 
   paginate() {
     const page = Number(this?.query?.page) || 1;
-    const limit = Number(this?.query?.limit) || 10;
+    const limit = Number(this?.query?.limit) || 1;
     const skip = Number(page - 1) * limit || 0;
 
     this.modelQuery = this.modelQuery.skip(skip).limit(limit);
@@ -68,7 +53,7 @@ class QueryBuilder<T> {
     const countDocs = await this.modelQuery.model.countDocuments(query);
 
     const page = Number(this?.query?.page) || 1;
-    const limit = Number(this?.query?.limit) || 10;
+    const limit = Number(this?.query?.limit) || 1;
 
     const totalPage = Math.ceil(countDocs / limit);
 

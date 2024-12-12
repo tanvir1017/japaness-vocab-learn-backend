@@ -14,14 +14,17 @@ router.route("/list").get(LessonController.getAllLessonList);
 router.route("/:id").get(LessonController.getSingleLesson);
 
 // * Route that responsible for find individual Lesson by `by Lesson No`
-router.route("/:lessonNo").get(LessonController.getLessonByLessonNo);
+router.route("/lessonNo/:lessonNo").get(LessonController.getLessonByLessonNo);
 
 // * Route that responsible for update the Lesson information
-router.route("/create-lesson").post(
-  //authGuard(USER_ROLE.admin),
-  sanitizeClientDataViaZod(LessonValidationViaZod.createLessonValidationSchema),
-  LessonController.createLesson,
-);
+router
+  .route("/create-lesson")
+  .post(
+    sanitizeClientDataViaZod(
+      LessonValidationViaZod.createLessonValidationSchema,
+    ),
+    LessonController.createLesson,
+  );
 
 // * Route that responsible for update the Lesson information
 router
