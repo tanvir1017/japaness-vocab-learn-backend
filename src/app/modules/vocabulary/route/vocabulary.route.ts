@@ -1,7 +1,5 @@
 import { Router } from "express";
-import { authGuard } from "../../../middleware/auth";
 import sanitizeClientDataViaZod from "../../../middleware/sanitizeClientDataViaZod";
-import { USER_ROLE } from "../../user/constant/user.constant";
 import { VocabularyController } from "../controller/vocabulary.controller";
 import { VocabularyValidationViaZod } from "../validation/vocabulary.validation";
 
@@ -19,15 +17,13 @@ router
   .get(VocabularyController.getAllVocabularyByLessonId);
 
 // * Route that responsible for update the Vocabulary information
-router
-  .route("/create-Vocabulary")
-  .post(
-    authGuard(USER_ROLE.admin),
-    sanitizeClientDataViaZod(
-      VocabularyValidationViaZod.createVocabularyValidationSchema,
-    ),
-    VocabularyController.createVocabulary,
-  );
+router.route("/create-Vocabulary").post(
+  // authGuard(USER_ROLE.admin),
+  sanitizeClientDataViaZod(
+    VocabularyValidationViaZod.createVocabularyValidationSchema,
+  ),
+  VocabularyController.createVocabulary,
+);
 
 // * Route that responsible for update the Vocabulary information
 router

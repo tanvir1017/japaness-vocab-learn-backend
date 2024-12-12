@@ -1,68 +1,54 @@
 import httpStatus from "http-status-codes";
-import { JwtPayload } from "jsonwebtoken";
 import AppError from "../../../errors/appError";
-import { User } from "../../user/model/user.model";
-import { TLesson } from "../interface/lesson.interface";
-import { Lesson } from "../model/lesson.model";
+import { TTutorial } from "../../tutorial/interface/tutorial.interface";
+import { Tutorial } from "../../tutorial/model/tutorial.model";
 
-// * Get single Lesson by Object Id from db
-const getSingleLesson = async (id: string) => {
-  const result = await Lesson.findById(id);
+// * Get single Tutorial by Object Id from db
+const getSingleTutorial = async (id: string) => {
+  const result = await Tutorial.findById(id);
   return result;
 };
 
-// * Get single Lesson by Object Id from db
-const getSingleLessonFromDBByLessonNo = async (lessonNo: string) => {
-  const result = await Lesson.findOne({ lessonNo });
+// * Get all Tutorial From Db
+const getAllTutorialFromDB = async () => {
+  const result = await Tutorial.find({});
   return result;
 };
 
-// * Get all Lesson From Db
-const getAllLessonFromDB = async () => {
-  const result = await Lesson.find({});
+// * Get all Tutorial From Db
+const createTutorialIntoDB = async (payload: TTutorial) => {
+  const result = await Tutorial.create(payload);
   return result;
 };
 
-// * Get all Lesson From Db
-const createLessonIntoDB = async (user: JwtPayload, payload: TLesson) => {
-  const userId = await User.findOne({ role: "admin", email: user?.userEmail });
-  if (!userId) {
-    throw new AppError(httpStatus.FORBIDDEN, "Only admin can create lesson");
-  }
-  const result = await Lesson.create({ ...payload, user: userId });
-  return result;
-};
-
-// * Updating Lesson
-const UpdateLessonFromDB = async (id: string, payload: Partial<TLesson>) => {
+// * Updating Tutorial
+const UpdateTutorialFromDB = async (
+  id: string,
+  payload: Partial<TTutorial>,
+) => {
   if (!Object.entries(payload).length) {
     throw new AppError(httpStatus.BAD_REQUEST, "Request body  is empty");
   }
-  const result = await Lesson.findByIdAndUpdate(id, payload, {
+  const result = await Tutorial.findByIdAndUpdate(id, payload, {
     new: true,
     runValidators: true,
   });
   return result;
 };
 
-// * Delete Lesson From Db
-const deleteLessonFromDB = async (id: string) => {
-  const deletedLesson = await Lesson.findByIdAndUpdate(
-    id,
-    { isDeleted: true },
-    { new: true },
-  );
+// * Delete Tutorial From Db
+const deleteTutorialFromDB = async (id: string) => {
+  const deletedTutorial = await Tutorial.findOneAndDelete({ _id: id });
 
-  if (!deletedLesson) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Failed to delete Lesson");
+  if (!deletedTutorial) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Failed to delete Tutorial");
   }
-  return deletedLesson;
+  return deletedTutorial;
 };
-export const LessonService = {
-  getSingleLessonFromDBByLessonNo,
-  getSingleLesson,
-  getAllLessonFromDB,
-  UpdateLessonFromDB,
-  deleteLessonFromDB,
-  createLessonIntoDB,
+export const TutorialService = {
+  getSingleTutorial,
+  getAllTutorialFromDB,
+  UpdateTutorialFromDB,
+  deleteTutorialFromDB,
+  createTutorialIntoDB,
 };

@@ -1,54 +1,77 @@
 import httpStatus from "http-status-codes";
 import AppError from "../../../errors/appError";
-import { TTutorial } from "../../tutorial/interface/tutorial.interface";
-import { Tutorial } from "../../tutorial/model/tutorial.model";
+import { TLesson } from "../interface/lesson.interface";
+import { Lesson } from "../model/lesson.model";
 
-// * Get single Tutorial by Object Id from db
-const getSingleTutorial = async (id: string) => {
-  const result = await Tutorial.findById(id);
+// * Get single Lesson by Object Id from db
+const getSingleLesson = async (id: string) => {
+  const result = await Lesson.findById(id);
   return result;
 };
 
-// * Get all Tutorial From Db
-const getAllTutorialFromDB = async () => {
-  const result = await Tutorial.find({});
+// * Get single Lesson by Object Id from db
+const getSingleLessonFromDBByLessonNo = async (lessonNo: string) => {
+  const result = await Lesson.findOne({ lessonNo });
   return result;
 };
 
-// * Get all Tutorial From Db
-const createTutorialIntoDB = async (payload: TTutorial) => {
-  const result = await Tutorial.create(payload);
+// * Get all Lesson From Db
+const getAllLessonFromDB = async () => {
+  const result = await Lesson.find();
   return result;
 };
 
-// * Updating Tutorial
-const UpdateTutorialFromDB = async (
-  id: string,
-  payload: Partial<TTutorial>,
-) => {
+// * Get all Lesson From Db
+const getAllLessonNoListFromDB = async () => {
+  const result = await Lesson.find().select({ lessonNo: true, _id: true });
+  return result;
+};
+
+// * Get all Lesson From Db
+const createLessonIntoDB = async (payload: TLesson) => {
+  //user?: JwtPayload,
+  // const userId = await User.findOne({ role: "admin", email: user?.userEmail });
+  // if (!userId) {
+  //   throw new AppError(httpStatus.FORBIDDEN, "Only admin can create lesson");
+  // }
+  const result = await Lesson.create({
+    ...payload,
+    user: "67597eb3dfe3e170e669315c",
+  });
+  return result;
+};
+
+// * Updating Lesson
+const UpdateLessonFromDB = async (id: string, payload: Partial<TLesson>) => {
   if (!Object.entries(payload).length) {
     throw new AppError(httpStatus.BAD_REQUEST, "Request body  is empty");
   }
-  const result = await Tutorial.findByIdAndUpdate(id, payload, {
+  const result = await Lesson.findByIdAndUpdate(id, payload, {
     new: true,
     runValidators: true,
   });
   return result;
 };
 
-// * Delete Tutorial From Db
-const deleteTutorialFromDB = async (id: string) => {
-  const deletedTutorial = await Tutorial.findOneAndDelete({ _id: id });
+// * Delete Lesson From Db
+const deleteLessonFromDB = async (id: string) => {
+  const deletedLesson = await Lesson.findByIdAndUpdate(
+    id,
+    { isDeleted: true },
+    { new: true },
+  );
 
-  if (!deletedTutorial) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Failed to delete Tutorial");
+  if (!deletedLesson) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Failed to delete Lesson");
   }
-  return deletedTutorial;
+  return deletedLesson;
 };
-export const TutorialService = {
-  getSingleTutorial,
-  getAllTutorialFromDB,
-  UpdateTutorialFromDB,
-  deleteTutorialFromDB,
-  createTutorialIntoDB,
+export const LessonService = {
+  getSingleLessonFromDBByLessonNo,
+  getSingleLesson,
+  getAllLessonNoListFromDB,
+  getAllLessonFromDB,
+  UpdateLessonFromDB,
+  deleteLessonFromDB,
+  createLessonIntoDB,
 };

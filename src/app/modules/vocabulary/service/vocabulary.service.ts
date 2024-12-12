@@ -1,7 +1,5 @@
 import httpStatus from "http-status-codes";
-import { JwtPayload } from "jsonwebtoken";
 import AppError from "../../../errors/appError";
-import { User } from "../../user/model/user.model";
 import { TVocabulary } from "../interface/vocabulary.interface";
 import { Vocabulary } from "../model/vocabulary.model";
 
@@ -28,16 +26,17 @@ const getAllVocabularyBasedOnLessonIdFromDB = async (lessonId: string) => {
 
 // * Get all Vocabulary From Db
 const getAllVocabularyFromDB = async () => {
-  const result = await Vocabulary.find({});
+  const result = await Vocabulary.find().populate("lesson");
   return result;
 };
 
 // * Get all Vocabulary From Db
 const createVocabularyIntoDB = async (
-  user: JwtPayload,
+  //user?: JwtPayload,
   payload: TVocabulary,
 ) => {
-  const userId = await User.findOne({ role: "admin", email: user?.userEmail });
+  //const userId = await User.findOne({ role: "admin", email: user?.userEmail });
+  const userId = "67597eb3dfe3e170e669315c";
   if (!userId) {
     throw new AppError(
       httpStatus.FORBIDDEN,

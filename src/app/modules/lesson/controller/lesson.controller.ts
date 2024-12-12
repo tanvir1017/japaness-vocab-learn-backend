@@ -42,8 +42,21 @@ const getAllLesson = asyncHandler(async (req, res) => {
 });
 
 // * Get all Lesson from db
+const getAllLessonList = asyncHandler(async (req, res) => {
+  const result = await LessonService.getAllLessonNoListFromDB();
+
+  sendResponse(res, {
+    statuscode: httpStatus.OK,
+    success: true,
+    message: "Lesson list is retrieved successfully",
+    data: result,
+  });
+});
+
+// * Get all Lesson from db
 const createLesson = asyncHandler(async (req, res) => {
-  const result = await LessonService.createLessonIntoDB(req.user, req.body);
+  // const result = await LessonService.createLessonIntoDB(req.user, req.body);
+  const result = await LessonService.createLessonIntoDB(req.body);
 
   sendResponse(res, {
     statuscode: httpStatus.CREATED,
@@ -86,4 +99,5 @@ export const LessonController = {
   getLessonByLessonNo,
   deleteLesson,
   createLesson,
+  getAllLessonList,
 };

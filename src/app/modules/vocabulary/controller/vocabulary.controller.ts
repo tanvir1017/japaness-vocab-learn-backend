@@ -45,7 +45,7 @@ const getAllVocabularyByLessonId = asyncHandler(async (req, res) => {
 // * Get all Vocabulary from db
 const createVocabulary = asyncHandler(async (req, res) => {
   const result = await VocabularyService.createVocabularyIntoDB(
-    req.user,
+    //req.user,
     req.body,
   );
 

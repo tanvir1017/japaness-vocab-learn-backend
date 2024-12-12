@@ -1,7 +1,7 @@
 import httpStatus from "http-status-codes";
 import asyncHandler from "../../../utils/asyncHandler";
 import sendResponse from "../../../utils/sendResponse";
-import { TutorialService } from "../../lesson/service/lesson.service";
+import { TutorialService } from "../service/tutorial.service";
 
 // * Get single/individual Tutorial
 const getSingleTutorial = asyncHandler(async (req, res) => {
