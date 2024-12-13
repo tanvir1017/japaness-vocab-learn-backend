@@ -30,6 +30,10 @@ app.get("/api/v1/check", async (req, res) => {
   res.status(200).json({ message: "Hello from the Vocabulary learn server!" });
 });
 
+app.get("/", async (req, res) => {
+  res.status(200).json({ message: "こんにちは" });
+});
+
 // TODO => Using routes for whole application
 app.use("/api/v1", routes);
 
